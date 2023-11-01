@@ -1,92 +1,90 @@
 
 <head>
 <style>
-    #sortable-list {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-    }
 
-    #sortable-list li {
-      margin-bottom: 10px;
-    }
+import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #a7ff35;
+}
+#sortable-form{
+  background-color: hsl(0, 0%, 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 
-    #sortable-list li input {
-      width: 200px;
-    }
+}
+#sortable-list {
+  width: 425px;
+  padding: 25px;
+  background-color: #fff;
+  border-radius: 7px;
+  padding: 30px 25px 20px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+#sortable-list .list-item {
+  list-style: none;
+  display: flex;
+  cursor: move;
+  background-color: #fff;
+  align-items: center;
+  border-radius: 5px;
+  padding: 10px 13px;
+  margin-bottom: 11px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  border: 1px solid #ccc;
+  justify-content: space-between;
+}
+.item .details {
+  display: flex;
+  align-items: center;
+}
+.item .details img {
+  height: 43px;
+  width: 43px;
+  pointer-events: none;
+  margin-right: 12px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.item .details span {
+  font-size: 1.13rem;
+}
+.item i {
+  color: #474747;
+  font-size: 1.13rem;
+}
+li.sortable-drag :where(.details, i) {
+  opacity: 1;
+  
+   
+}
+.item.sortable-ghost :where(.details, i) {
+  opacity: 0;
+}
+li.item.sortable-ghost{
+  background-color: #a7ff35;
+  filter: blur(5px);
+}
 
-    #sortable-list li input:focus {
-      outline: none;
-      box-shadow: 0 0 5px #6c63ff;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #ccccce;
-      width: 100%;
-      height: 100%;
-    }
-    .wrapper {
-      display: flex;
-      flex-direction: column;
-      /* position: relative; */
-      height: 100vh;
-      justify-content: center;
-    }
-    .container {
-      font-family: "Poppins", sans-serif;
-      background-color: #aaaaaa;
-      padding: 3em 2em;
-      border-radius: 0.8em;
-      display: flex;
-      flex-direction: column;
-      margin: 10px;
-    }
-
-    #sortable-list {
-      position: relative;
-      padding-inline-start: 0;
-      list-style-type: none;
-      background-color: #aaaaaa;
-    }
-
-    li {
-      padding: 0.8em 0;
-      border-radius: 0.2em;
-      margin: 1em auto;
-      border: 1px solid #000000;
-      font-size: 2rem;
-      text-align: center;
-      background-color: #ffffff;
-    }
-
-    li:hover {
-      cursor: move;
-      background-color: #b1ffff;
-      border-color: #8673f2;
-      color: #8673f2;
-    }
-
-    #sortable-form {
-      display: flex;
-      flex-direction: column-reverse;
-      transition-duration: 1000ms;
-    }
-    .sortable-ghost {
-      background-color: #b1ffff;
-    }
-
-    #submit {
-      margin-top: 2rem;
-      padding: 1.2rem;
-      background-color: #b1ffff;
-      font-size: 2.5rem;
-    }
+.sortable-drag {
+  box-shadow: 0px 6px 11px 1px rgba(0,0,0,0.4) !important;
+  transform: scale(1.1);
+}
+.sortable-ghost{
+  background-color: #a7ff35;
+  filter: blur(5px);
+}
   </style>
   </head>
 <body class="wrapper">
@@ -99,60 +97,64 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <script>
-    // Assume the URL has query parameters like ?item=Item%201&item=Item%202&item=Item%203
-
+    // Get the sortable list container element
+    const sortableList = document.getElementById('sortable-list');
+  
     // Get the query parameters from the URL
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-
-    // Get the values of the 'item' parameter
-    const itemValues = urlParams.getAll('item');
-
-    // Create the HTML list
-    const ulElement = document.getElementById('sortable-list');
-
-    // Loop through the item values and create list items
-    itemValues.forEach(value => {
-      const liElement = document.createElement('li');
-      liElement.textContent = value;
-      ulElement.appendChild(liElement);
+    const urlParams = new URLSearchParams(window.location.search);
+  
+    // Create an empty array to store the changes
+    const changes = [];
+  
+    // Loop through the query parameters and create list items
+    urlParams.forEach((value, index) => {
+      const listItem = document.createElement('li');
+      listItem.setAttribute('class', 'list-item item');
+      listItem.setAttribute('draggable', true);
+      listItem.setAttribute('id', `${value}-${index}`);
+      listItem.textContent = `${value}`;
+      sortableList.appendChild(listItem);
     });
-
-    window.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('sortable-form');
-      const sortableList = document.getElementById('sortable-list');
-
-      Sortable.create(sortableList);
-
-form.addEventListener('submit', function(e) {
-  e.preventDefault();
-
-  const lis = sortableList.getElementsByTagName('li');
-  const values = Array.from(lis).map(li => li.textContent);
-
-  // Create the payload object with the values
-  const payload = { values };
-
-  // Send the payload to the webhook URL
-  fetch('https://hook.us1.make.com/8cbqihl1ag1d4fl957asaf2khxt3ogtq', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  })
-    .then(response => {
-      if (response.ok) {
-        console.log('Values sent successfully!');
-      } else {
-        console.error('Error sending values:', response.status);
-      }
-    })
-    .catch(error => {
-      console.error('Error sending values:', error);
+  
+    // Make the list sortable using Sortable.js
+    Sortable.create(sortableList, {
+      forceFallback: true,
+      fallbackClass: "sortable-list"
     });
-});
-});
+  
+    let reorderedList = '';
+  
+    // Add event listener for when the sorting changes
+    sortableList.addEventListener('sort', function(event) {
+      reorderedList = Array.from(sortableList.children)
+        .map(listItem => listItem.textContent)
+        .join(';');
+    });
+  
+    // Event listener for form submit
+    const form = document.getElementById('sortable-form');
+  
+    form.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent the form from submitting normally
+  
+      // Send the changes via POST request
+      fetch('https://hook.us1.make.com/8cbqihl1ag1d4fl957asaf2khxt3ogtq', {
+        method: 'POST',
+        body: JSON.stringify(reorderedList),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response from the server
+        console.log(data);
+      })
+      .catch(error => {
+        // Handle any errors that occur during the request
+        console.error(error);
+      });
+    });
 </script>
 </body>
 
