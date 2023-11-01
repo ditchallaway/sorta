@@ -16,15 +16,14 @@ body {
   min-height: 100vh;
   background: #a7ff35;
 }
-#sortable-form{
+.container{
   background-color: hsl(0, 0%, 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-
 }
-#sortable-list {
+  #sortable-list {
   width: 425px;
   padding: 25px;
   background-color: #fff;
@@ -111,7 +110,7 @@ li.item.sortable-ghost{
       const listItem = document.createElement('li');
       listItem.setAttribute('class', 'list-item item');
       listItem.setAttribute('draggable', true);
-      listItem.setAttribute('id', `${value}-${index}`);
+      listItem.setAttribute('id', `id-${value}`);
       listItem.textContent = `${value}`;
       sortableList.appendChild(listItem);
     });
