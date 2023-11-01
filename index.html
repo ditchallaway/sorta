@@ -14,7 +14,7 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: #a7ff35;
+  background: #b1afaf;
 }
 .container{
   background-color: hsl(0, 0%, 100%);
@@ -84,6 +84,16 @@ li.item.sortable-ghost{
   background-color: #a7ff35;
   filter: blur(5px);
 }
+input#submit{
+  background-color: #a7ff35;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+
+}
   </style>
   </head>
 <body class="wrapper">
@@ -113,6 +123,8 @@ li.item.sortable-ghost{
       listItem.setAttribute('id', `id-${value}`);
       listItem.textContent = `${value}`;
       sortableList.appendChild(listItem);
+      const row = document.createElement('div');
+      details.setAttribute('class', 'details');
     });
   
     // Make the list sortable using Sortable.js
